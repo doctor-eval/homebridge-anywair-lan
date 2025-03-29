@@ -1,4 +1,7 @@
-# Homebridge Plugin for LAN Control of Mitsubishi Heavy Industries MH-AC-WIFI-1
+# Homebridge Plugin for LAN Control of Fujitsu Anywair devices
+
+Note: This is an **experimental** fork of https://github.com/rchrch/homebridge-mhacwifi1-lan/fork to remove
+certain accessories that don't work with the Fujitsu implementation. More to come if I get it working.
 
 [![Version](https://img.shields.io/npm/v/homebridge-mhacwifi1-lan)](https://www.npmjs.com/package/homebridge-mhacwifi1-lan) &nbsp;
 <img src="https://img.shields.io/badge/node-%3E%3D10.17-brightgreen"> &nbsp;

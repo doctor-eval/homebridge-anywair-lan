@@ -1,17 +1,17 @@
 # Homebridge Plugin for LAN Control of Fujitsu Anywair devices
 
-This project was an **experimental** fork of https://github.com/rchrch/homebridge-mhacwifi1-lan/fork intended
+This project was an **experimental** fork of https://github.com/rchrch/homebridge-mhacwifi1-lan intended
 to remove certain accessories that don't work with the Fujitsu implementation. Unfortunately, this approach
 is not going to work.
 
 ## Why it won't work
 
-Our Fujitsu units use a Wifi module created by Intensis which provides the ability to control the air conditioners
+Our Fujitsu units use a Wifi module created by Intesis which provides the ability to control the air conditioners
 over the LAN. The ideal would be to use this API to allow control via Apple's HomeKit.
 
 While it is certainly possible to read and control the air conditioning units over the LAN, unfortunately, HomeKit
 requires the current temperature to be included in the HeaterCooler implementation. Sadly, the Fujitsu units do
-not provide this data to the Intensis dongles (the dongles themselves do support this).
+not provide this data to the Intesis dongles (the dongles themselves do support this).
 
 While it's possible to do hacky things such as using the set point temperature as the ambient temperature, this
 approach will provide a crappy experience in my home, which is not really something I want to do. It's possible,

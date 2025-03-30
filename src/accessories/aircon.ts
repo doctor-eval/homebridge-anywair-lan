@@ -38,10 +38,10 @@ export class AirconService {
             })
             .onGet(this.getCoolingThresholdTemperature.bind(this))
             .onSet(this.setCoolingThresholdTemperature.bind(this));
-        this.service.getCharacteristic(Characteristic.CurrentTemperature)
-            .onGet(this.getCurrentTemperature.bind(this));
-        this.service.getCharacteristic(Characteristic.CurrentHeaterCoolerState)
-            .onGet(this.getCurrentHeaterCoolerState.bind(this));
+        // this.service.getCharacteristic(Characteristic.CurrentTemperature)
+        //     .onGet(this.getCurrentTemperature.bind(this));
+        // this.service.getCharacteristic(Characteristic.CurrentHeaterCoolerState)
+        //     .onGet(this.getCurrentHeaterCoolerState.bind(this));
         this.service.getCharacteristic(Characteristic.HeatingThresholdTemperature)
             .setProps({
                 minValue: this.device.get.minSetpoint(),
@@ -57,9 +57,9 @@ export class AirconService {
             .setProps({ minValue: 0, maxValue: 100, minStep: 25 })
             .onGet(this.getRotationSpeed.bind(this))
             .onSet(this.setRotationSpeed.bind(this));
-        this.service.getCharacteristic(Characteristic.SwingMode)
-            .onGet(this.getSwingMode.bind(this))
-            .onSet(this.setSwingMode.bind(this));
+        // this.service.getCharacteristic(Characteristic.SwingMode)
+        //     .onGet(this.getSwingMode.bind(this))
+        //     .onSet(this.setSwingMode.bind(this));
         this.service.getCharacteristic(Characteristic.TargetHeaterCoolerState)
             .onGet(this.getTargetHeaterCoolerState.bind(this))
             .onSet(this.setTargetHeaterCoolerState.bind(this));
@@ -73,12 +73,12 @@ export class AirconService {
             return
         this.syncCharacteristic('Active', this.getActive())
         this.syncCharacteristic('CoolingThresholdTemperature', this.getCoolingThresholdTemperature())
-        this.syncCharacteristic('CurrentTemperature', this.getCurrentTemperature())
-        this.syncCharacteristic('CurrentHeaterCoolerState', this.getCurrentHeaterCoolerState())
+        // this.syncCharacteristic('CurrentTemperature', this.getCurrentTemperature())
+        // this.syncCharacteristic('CurrentHeaterCoolerState', this.getCurrentHeaterCoolerState())
         this.syncCharacteristic('HeatingThresholdTemperature', this.getHeatingThresholdTemperature())
         this.syncCharacteristic('LockPhysicalControls', this.getLockPhysicalControls())
         this.syncCharacteristic('RotationSpeed', this.getRotationSpeed())
-        this.syncCharacteristic('SwingMode', this.getSwingMode())
+        // this.syncCharacteristic('SwingMode', this.getSwingMode())
         this.syncCharacteristic('TargetHeaterCoolerState', this.getTargetHeaterCoolerState())
     }
 
@@ -122,46 +122,46 @@ export class AirconService {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private getCurrentHeaterCoolerState(): number {
-        this.checkValid()
-
-        let currentState: number;
-        const characteristic = this.platform.Characteristic;
-        const mode = this.device.get.mode();
-        const currentTemperature = this.device.get.currentTemperature()
-        const setpoint = this.device.get.setpoint();
-
-        if (mode == MhacModeTypes.AUTO) {
-            if (currentTemperature > setpoint) {
-                currentState = characteristic.CurrentHeaterCoolerState.COOLING;
-            } else {
-                currentState = characteristic.CurrentHeaterCoolerState.HEATING;
-            }
-        } else if (mode == MhacModeTypes.HEAT) {
-            if (currentTemperature < setpoint) {
-                currentState = characteristic.CurrentHeaterCoolerState.HEATING;
-            } else {
-                currentState = characteristic.CurrentHeaterCoolerState.IDLE;
-            }
-        } else if (mode == MhacModeTypes.DRY) {
-            currentState = characteristic.CurrentHeaterCoolerState.INACTIVE;
-        } else if (mode == MhacModeTypes.FAN) {
-            currentState = characteristic.CurrentHeaterCoolerState.INACTIVE;
-        } else {   // state.mode == MhacModeTypes.COOL
-            if (currentTemperature > setpoint) {
-                currentState = characteristic.CurrentHeaterCoolerState.COOLING;
-            } else {
-                currentState = characteristic.CurrentHeaterCoolerState.IDLE;
-            }
-        }
-        return currentState;
-    }
+    // private getCurrentHeaterCoolerState(): number {
+    //     this.checkValid()
+    //
+    //     let currentState: number;
+    //     const characteristic = this.platform.Characteristic;
+    //     const mode = this.device.get.mode();
+    //     // const currentTemperature = this.device.get.currentTemperature()
+    //     const setpoint = this.device.get.setpoint();
+    //
+    //     if (mode == MhacModeTypes.AUTO) {
+    //         if (currentTemperature > setpoint) {
+    //             currentState = characteristic.CurrentHeaterCoolerState.COOLING;
+    //         } else {
+    //             currentState = characteristic.CurrentHeaterCoolerState.HEATING;
+    //         }
+    //     } else if (mode == MhacModeTypes.HEAT) {
+    //         if (currentTemperature < setpoint) {
+    //             currentState = characteristic.CurrentHeaterCoolerState.HEATING;
+    //         } else {
+    //             currentState = characteristic.CurrentHeaterCoolerState.IDLE;
+    //         }
+    //     } else if (mode == MhacModeTypes.DRY) {
+    //         currentState = characteristic.CurrentHeaterCoolerState.INACTIVE;
+    //     } else if (mode == MhacModeTypes.FAN) {
+    //         currentState = characteristic.CurrentHeaterCoolerState.INACTIVE;
+    //     } else {   // state.mode == MhacModeTypes.COOL
+    //         if (currentTemperature > setpoint) {
+    //             currentState = characteristic.CurrentHeaterCoolerState.COOLING;
+    //         } else {
+    //             currentState = characteristic.CurrentHeaterCoolerState.IDLE;
+    //         }
+    //     }
+    //     return currentState;
+    // }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private getCurrentTemperature(): number {
-        this.checkValid()
-        return this.device.get.currentTemperature();
-    }
+    // private getCurrentTemperature(): number {
+    //     this.checkValid()
+    //     return this.device.get.currentTemperature();
+    // }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private getHeatingThresholdTemperature(): number {

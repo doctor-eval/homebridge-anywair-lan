@@ -77,7 +77,7 @@ export class MHACWIFI1 extends EventEmitter {
      */
     public get = {
         active: (): number => this.state.active,
-        currentTemperature: (): number => this.state.currentTemperature,
+        // currentTemperature: (): number => this.state.currentTemperature,
         fanSpeed: (): number => this.state.fanSpeed,
         locked: (): number => this.state.remoteDisable,
         maxSetpoint: (): number => this.state.maxSetpoint,
@@ -292,7 +292,11 @@ export class MHACWIFI1 extends EventEmitter {
         sensors.forEach(item => {
             const map = this.sensorMap[item.uid];
             if (!map) {
-                this.log.error('Unhandled sensor item', item);
+                // this.log.error('Unhandled sensor item', item);
+                // [30/03/2025, 12:51:45 pm] [My Aircon] Unhandled sensor item { uid: 6, value: 10, status: 0 }
+                // [30/03/2025, 12:51:45 pm] [My Aircon] Unhandled sensor item { uid: 10, value: 32768, status: 1 }
+                // [30/03/2025, 12:51:46 pm] [My Aircon] Unhandled sensor item { uid: 6, value: 10, status: 0 }
+                // [30/03/2025, 12:51:46 pm] [My Aircon] Unhandled sensor item { uid: 10, value: 32768, status: 1 }
                 return;
             }
             if (!map.attr) {
@@ -502,11 +506,11 @@ const SensorConfigMap = [
         fromVal: (v: number) => { if (v == 32768) { return 28; } else { return v / 10.0 } },
         toVal: (v: number) => { return v * 10.0 },
     },
-    {
-        uid: 10,
-        attr: 'currentTemperature',
-        fromVal: (v: number) => { return v / 10.0 },
-    },
+    // {
+    //     uid: 10,
+    //     attr: 'currentTemperature',
+    //     fromVal: (v: number) => { return v / 10.0 },
+    // },
     {
         uid: 12,
         attr: 'remoteDisable',

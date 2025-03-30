@@ -1,111 +1,34 @@
 # Homebridge Plugin for LAN Control of Fujitsu Anywair devices
 
-Note: This is an **experimental** fork of https://github.com/rchrch/homebridge-mhacwifi1-lan/fork to remove
-certain accessories that don't work with the Fujitsu implementation. More to come if I get it working.
+This project was an **experimental** fork of https://github.com/rchrch/homebridge-mhacwifi1-lan/fork intended
+to remove certain accessories that don't work with the Fujitsu implementation. Unfortunately, this approach
+is not going to work.
 
-[![Version](https://img.shields.io/npm/v/homebridge-mhacwifi1-lan)](https://www.npmjs.com/package/homebridge-mhacwifi1-lan) &nbsp;
-<img src="https://img.shields.io/badge/node-%3E%3D10.17-brightgreen"> &nbsp;
-<img src="https://img.shields.io/badge/homebridge-%3E%3D1.3.0-brightgreen"> &nbsp;
-[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins) &nbsp;
+## Why it won't work
 
-This [Homebridge](https://github.com/nfarina/homebridge) plugin allows Mitsubishi Heavy Industries AirCon using the Intesis MH-AC-WIFI-1 controller to be accessible in Apple HomeKit.  It creates a platform device that allows aircons to be configured via the [Homebridge Config UI](https://github.com/oznu/homebridge-config-ui-x) or manually in the Homebridge config.json file.
+Our Fujitsu units use a Wifi module created by Intensis which provides the ability to control the air conditioners
+over the LAN. The ideal would be to use this API to allow control via Apple's HomeKit.
 
-The plugin creates the following Homekit accessories:
-* HeaterCooler - HEAT, COOL, and AUTO modes, fan speed, and swing, and remote control lock
-* Dehumidifier - DRY mode, fan speed, and swing
-* Fan - FAN mode, fan speed, and swing
-* Temperature - Optional outdoor temperature sensor accessory on the compressor (if available)
+While it is certainly possible to read and control the air conditioning units over the LAN, unfortunately, HomeKit
+requires the current temperature to be included in the HeaterCooler implementation. Sadly, the Fujitsu units do
+not provide this data to the Intensis dongles (the dongles themselves do support this).
 
-## Installing
+While it's possible to do hacky things such as using the set point temperature as the ambient temperature, this
+approach will provide a crappy experience in my home, which is not really something I want to do. It's possible,
+but it's not good enough for me.
 
-For instructions on installing Homebridge look [here](https://github.com/homebridge/homebridge/wiki).
+So, unfortunately, from what I've been able to tell, it will be very difficult to create a single, stand-alone
+HomeKit plugin for Fujistu air conditioners that works the way Apple intended.
 
-The plugin may be installed via the Homebridge Config UI or via npm.
+## What can we do instead?
 
-To install under the Homebridge UI, click on "Plugins" and search for "mhacwifi1-lan".  Click on the "INSTALL" link for "Homebridge Mhacwifi1 Lan".
+All is not lost!
 
-If you are not using the Homebridge UI, install with `npm install homebridge-mhacwifi1-lan`.
+I'm currently considering a port of the original JavaScript code to an MQTT based data collector
+which can run as a daemon and monitor my air conditioning units. My current plan is to combine the Fujitsu
+control data with data from a separate ZigBee sensor, into a combined HomeKit control that's published
+using Node-Red.
 
+I've already got the bones of this working, so the MQTT interface is really the last step.
 
-## Configuration
-
-The easiest approach to configuration is to use the web-based Homebridge UI.  If you aren't using the web-based UI, use the following sections to configure the plugin.
-
-### Required
-
-The only required configuration for this plugin are the username, password, and IP address of the unit.  Adding the following json configuration to the platforms area:
-
-```json
-{
-    ...
-    "platforms": [
-        {
-            "platform": "MH-AC-WIFI-1",
-            "name": "My Aircon",
-            "host": "192.168.1.100",
-            "username": "admin",
-            "password": "admin",
-        }
-    ]
-}
-```
-
-### Optional
-
-Additional devices may be added as new platforms.  If you need to customise the username or password per device, you can add these values .  Additionally, you can disable the outdoor temperature sensor by setting `outdoorTemperature` to false.
-
-```json
-{
-    ...
-    "platforms": [
-        {
-            "platform": "MH-AC-WIFI-1",
-            "name": "Lounge",
-            "host": "192.168.1.100",
-            "username": "admin-1",
-            "password": "password-1",
-            "outdoorTemperature": true
-        },
-        {
-            "platform": "MH-AC-WIFI-1",
-            "name": "Bedroom",
-            "host": "192.168.1.101",
-            "username": "admin-2",
-            "password": "password-2",
-            "outdoorTemperature": false
-        }
-    ]
-}
-```
-
-### All config options
-
-| Config | Description | Default |
-| ------ | ----------- | ------- |
-| name | Name you want to identify the aircon by | *required* |
-| host | IP address or hostname of the device | *required* |
-| username | Login name | admin |
-| password | Login password | admin|
-| outdoorTemperature | Enables outdoor temperature sensor | true |
-| minSetpoint | Minimum allowed temperature | 18 |
-| maxSetpoint | Maximum allowed temperature | 30 |
-| slowThreshold | Number of milliseonds before logging slow require | 500 |
-| syncPeriod | Number of milliseconds between sensor value polling requests | 1000 |
-
-## Known Issues
-
-From testing the MH-AC-WIFI-1 controller can be slow to respond to commands.  This appears to be normal.  To mitigate frequently queries, the plugin is designed to regularly poll all sensors every `syncPeriod` milliseconds.  The update interval is set to 1000 milliseconds by default.  You can get increase/decrease slow request logging by changing the `slowThrehold` value.  It is not recommended to sync faster than 1000 milliseconds.
-
-## TODO
-* Device discovery tools
-
-
-## License
-
-This project is licensed under the Apache v2 License - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Acknowledgments
-
-* Other existing plugin implementations for MH-AC-WIFI-1
-    * https://github.com/LarsenDX/homebridge-mhacwifi1-v2
-    * https://github.com/Rickth64/homebridge-mhacwifi1
+I'll post an update to this page if I am able to get it to work.

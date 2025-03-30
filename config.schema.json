@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "MH-AC-WIFI-1",
+  "pluginAlias": "AnywairLAN",
   "pluginType": "platform",
   "singular": false,
   "schema": {
@@ -15,11 +15,6 @@
         "title": "Host/IP",
         "type": "string",
         "required": true
-      },
-      "outdoorTemperature": {
-        "title": "Create outdoor temperature sensor",
-        "type": "boolean",
-        "default": true
       },
       "username": {
         "title": "Username",
@@ -69,16 +64,6 @@
   "layout": [
     "name",
     "host",
-    "outdoorTemperature",
-    {
-      "type": "fieldset",
-      "title": "Authentication",
-      "expandable": true,
-      "items": [
-        "username",
-        "password"
-      ]
-    },
     {
       "type": "fieldset",
       "title": "Advanced Settings",

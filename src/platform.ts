@@ -1,6 +1,6 @@
 import { API, APIEvent, Characteristic, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service } from 'homebridge'
 import { MHACWIFI1 } from './accessories/device'
-import { AirconAccessory, OutdoorTemperatureAccessory } from './accessory'
+import { AirconAccessory } from './accessory'
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings'
 
 
@@ -94,8 +94,8 @@ export class MitsubishiHeavyAirconPlatform implements DynamicPlatformPlugin {
             config.slowThreshold, config.minSetpoint, config.maxSetpoint, config.syncPeriod)
         device.startSynchronization()
 
-        let uuid = this.api.hap.uuid.generate('aircon' + config.mac)
-        let accessory = this.accessories.find(accessory => accessory.UUID === uuid)
+        const uuid = this.api.hap.uuid.generate('aircon' + config.mac)
+        const accessory = this.accessories.find(accessory => accessory.UUID === uuid)
         if (accessory) {
             this.log.info(`Restoring aircon accessory from cache: ${accessory.displayName} [${accessory.context.device.mac}]`)
             new AirconAccessory(device, this, accessory, config)
@@ -108,27 +108,27 @@ export class MitsubishiHeavyAirconPlatform implements DynamicPlatformPlugin {
             this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
         }
 
-        uuid = this.api.hap.uuid.generate('outdoor' + config.mac)
-        accessory = this.accessories.find(accessory => accessory.UUID === uuid)
-        if (config.outdoorTemperature) {
-            if (accessory) {
-                this.log.info(`Restoring outdoor temperature accessory from cache: ${accessory.displayName} [${accessory.context.device.mac}]`)
-                new AirconAccessory(device, this, accessory, config)
-            } else {
-                // Create the new accessory and link it to the platform
-                this.log.info(`Adding new outdoor temperature accessory: ${config.name} [${config.mac}]`)
-                const accessory = new this.api.platformAccessory(config.name, uuid)
-                accessory.context.device = config
-                new OutdoorTemperatureAccessory(device, this, accessory, config)
-                this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
-            }
-        } else {
-            if (accessory) {
-                // Remove accessory as it was unchecked
-                this.log.info(`Removing existing outdoor temperature accessory from cache: ${accessory.displayName} [${accessory.context.device.mac}]`)
-                this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
-            }
-        }
+        // uuid = this.api.hap.uuid.generate('outdoor' + config.mac)
+        // accessory = this.accessories.find(accessory => accessory.UUID === uuid)
+        // if (config.outdoorTemperature) {
+        //     if (accessory) {
+        //         this.log.info(`Restoring outdoor temperature accessory from cache: ${accessory.displayName} [${accessory.context.device.mac}]`)
+        //         new AirconAccessory(device, this, accessory, config)
+        //     } else {
+        //         // Create the new accessory and link it to the platform
+        //         this.log.info(`Adding new outdoor temperature accessory: ${config.name} [${config.mac}]`)
+        //         const accessory = new this.api.platformAccessory(config.name, uuid)
+        //         accessory.context.device = config
+        //         new OutdoorTemperatureAccessory(device, this, accessory, config)
+        //         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
+        //     }
+        // } else {
+        //     if (accessory) {
+        //         // Remove accessory as it was unchecked
+        //         this.log.info(`Removing existing outdoor temperature accessory from cache: ${accessory.displayName} [${accessory.context.device.mac}]`)
+        //         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory])
+        //     }
+        // }
 
     }
 }

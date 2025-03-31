@@ -1,34 +1,53 @@
 # Homebridge Plugin for LAN Control of Fujitsu Anywair devices
 
 This project was an **experimental** fork of https://github.com/rchrch/homebridge-mhacwifi1-lan intended
-to remove certain accessories that don't work with the Fujitsu implementation. Unfortunately, this approach
-is not going to work.
+to remove certain accessories that don't work with the Fujitsu implementation. Unfortunately, for
+a variety of reasons, I've decided to deploy my air conditioning controls using node-red instead of homebridge. 
 
-## Why it won't work
+The code in this repo should still work, but it's very much a hack job. You will probably be better off forking
+the original code. I was half way through working out how it all hangs together when I decided not to continue
+down the path.
+
+Nevertheless, I did discover how to get the air con units working under Homebridge with this one weird trick...
+
+## Current Temperature
 
 Our Fujitsu units use a Wifi module created by Intesis which provides the ability to control the air conditioners
-over the LAN. The ideal would be to use this API to allow control via Apple's HomeKit.
+over the LAN.
 
-While it is certainly possible to read and control the air conditioning units over the LAN, unfortunately, HomeKit
-requires the current temperature to be included in the HeaterCooler implementation. Sadly, the Fujitsu units do
-not provide this data to the Intesis dongles (the dongles themselves do support this).
+One of the biggest challenges I had was that these modules were not reporting current temperature.
+This is required by HomeKit... simulating the current temperature (say by using the set point)
+results in a very poor experience.
 
-While it's possible to do hacky things such as using the set point temperature as the ambient temperature, this
-approach will provide a crappy experience in my home, which is not really something I want to do. It's possible,
-but it's not good enough for me.
+It turns out that the installer had simply not configured the units to use the remote control
+sensors, so it wasn't reporting the room temperature. Apparently this is a common problem, and it's
+what initially lead me to stop working on this project.
 
-So, unfortunately, from what I've been able to tell, it will be very difficult to create a single, stand-alone
-HomeKit plugin for Fujistu air conditioners that works the way Apple intended.
+However, it turns out that there is a super-simple fix if you have wall-mounted (wired) remote controls:
 
-## What can we do instead?
+    Menu -> Next/Initial Setting -> Next/R.C. Sensor Setting -> *Used
 
-All is not lost!
+This made the wifi units start transmitting the current temperature immediately, which I picked up
+using the REST API. This would make the units compatible with HomeKit using either this module or the original
+MHACWIFI1-LAN module.
 
-I'm currently considering a port of the original JavaScript code to an MQTT based data collector
-which can run as a daemon and monitor my air conditioning units. My current plan is to combine the Fujitsu
-control data with data from a separate ZigBee sensor, into a combined HomeKit control that's published
-using Node-Red.
+So it turns out that these units are compatible with the HomeKit module after all! But by the time
+I discovered this, I'd moved on.
 
-I've already got the bones of this working, so the MQTT interface is really the last step.
+## Next Steps
 
-I'll post an update to this page if I am able to get it to work.
+While there's nothing wrong with the original code, my requirements are a bit more complex
+than is allowed for by the MHACWIFI code - in particular, I want to be able to control multiple units around
+the house (kids rooms, living room, etc). This is not supported with the original code and I'd need to make
+a bunch of changes to get it working effectively, as well as learning a bunch about HomeKit that I probably
+don't care about.
+
+Because I thought I needed to integrate individual sensor reading with the air conditioner units, I
+started working on an MQTT integration with the Fujitsu units with the goal of integrating
+with node-red and deConz. I like the flexibility of node-red, in particular because it's more configurable than the
+Homebridge module, which exposes a lot of settings that don't make sense in my (hardware) case.
+
+Since I got a long way down this path before discovering the R.C. temperature sensor
+setting, I'll probably continue with MQTT rather than continue to work on a fork of the homebridge module.
+
+The MQTT module is almost complete, and I'll post a link here once its done.
